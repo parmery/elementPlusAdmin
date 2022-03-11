@@ -6,15 +6,23 @@
       </div>
 
       <el-form-item>
-        <span class="svg-container">*</span>
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
         <el-input v-model="username" />
       </el-form-item>
 
       <el-tooltip content="Caps lock is On" placement="right" manual>
         <el-form-item>
-          <span class="svg-container">*</span>
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
           <el-input v-model="password" />
-          <span class="show-pwd">*</span>
+          <span class="show-pwd">
+            <svg-icon
+              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            />
+          </span>
         </el-form-item>
       </el-tooltip>
 
@@ -40,12 +48,16 @@
 </template>
 
 <script>
+import SvgIcon from "@/components/SvgIcon";
+
 export default {
   name: "login",
+  components: { SvgIcon },
   data() {
     return {
       username: "",
       password: "",
+      passwordType: "password",
     };
   },
 };
