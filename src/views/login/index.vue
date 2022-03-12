@@ -42,7 +42,7 @@
             autocomplete="on"
             @keyup.enter="handleLogin"
           />
-          <span class="show-pwd">
+          <span class="show-pwd" @click="showPwd">
             <svg-icon
               :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
             />
@@ -114,9 +114,19 @@ export default {
   },
   methods: {
     handleLogin() {
-      console.log(12123);
+      console.log(this.loginForm);
       this.$refs.loginForm.validate((valid) => {
         console.log(valid);
+      });
+    },
+    showPwd() {
+      if (this.passwordType === "password") {
+        this.passwordType = "";
+      } else {
+        this.passwordType = "password";
+      }
+      this.$nextTick(() => {
+        this.$refs.password.focus();
       });
     },
   },
