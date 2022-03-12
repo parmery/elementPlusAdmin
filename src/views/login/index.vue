@@ -1,23 +1,47 @@
 <template>
   <div class="login-container">
-    <el-form class="login-form">
+    <el-form
+      class="login-form"
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      autocomplete="on"
+      label-position="left"
+    >
       <div class="title-container">
         <h3 class="title">Login Form</h3>
       </div>
 
-      <el-form-item>
+      <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input v-model="username" />
+        <el-input
+          type="text"
+          placeholder="Username"
+          ref="username"
+          v-model="loginForm.username"
+          name="username"
+          tabindex="1"
+          autocomplete="on"
+        />
       </el-form-item>
 
       <el-tooltip content="Caps lock is On" placement="right" manual>
-        <el-form-item>
+        <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
-          <el-input v-model="password" />
+          <el-input
+            ref="password"
+            v-model="loginForm.password"
+            name="password"
+            placeholder="密码"
+            :type="passwordType"
+            tabindex="2"
+            autocomplete="on"
+            @keyup.enter="handleLogin"
+          />
           <span class="show-pwd">
             <svg-icon
               :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
@@ -26,7 +50,10 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button type="primary" style="width: 100%; margin-bottom: 30px"
+      <el-button
+        type="primary"
+        style="width: 100%; margin-bottom: 30px"
+        @click.prevent="handleLogin"
         >Login
       </el-button>
 
@@ -48,17 +75,50 @@
 </template>
 
 <script>
+import { validUsername } from "@/utils/validate";
 import SvgIcon from "@/components/SvgIcon";
 
 export default {
   name: "login",
   components: { SvgIcon },
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (!validUsername(value)) {
+        callback(new Error("请输入正确用户名"));
+      } else {
+        callback();
+      }
+    };
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error("密码不能少于6位"));
+      } else {
+        callback();
+      }
+    };
     return {
-      username: "",
-      password: "",
+      loginForm: {
+        username: "admin",
+        password: "11111",
+      },
+      loginRules: {
+        username: [
+          { required: true, trigger: "blur", validator: validateUsername },
+        ],
+        password: [
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
+      },
       passwordType: "password",
     };
+  },
+  methods: {
+    handleLogin() {
+      console.log(12123);
+      this.$refs.loginForm.validate((valid) => {
+        console.log(valid);
+      });
+    },
   },
 };
 </script>
