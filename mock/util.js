@@ -5,8 +5,8 @@ const responseBody = {
   code: 0,
 };
 
-export const builder = (data, message, code = 0, headers = {}) => {
-  responseBody.result = data;
+export const builder = ({ data, message, code = 0, headers = {} }) => {
+  responseBody.data = data;
   if (message !== undefined && message !== null) {
     responseBody.message = message;
   }

@@ -17,8 +17,8 @@ const info = (options) => {
   let loginInfo;
   if (!token) {
     loginInfo = {
-      code: 60204,
-      message: "Account and password are incorrect.",
+      code: 0,
+      message: "账号和密码不正确",
     };
   } else {
     loginInfo = {
