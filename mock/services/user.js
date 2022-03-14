@@ -1,5 +1,5 @@
 import Mock from "mockjs";
-import { builder, getBody } from "../util";
+import { builder, getBody, getQueryParameters } from "../util";
 
 const tokens = {
   admin: {
@@ -10,7 +10,24 @@ const tokens = {
   },
 };
 
-const info = (options) => {
+const users = {
+  "admin-token": {
+    roles: ["admin"],
+    introduction: "I am a super administrator",
+    avatar:
+      "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+    name: "Super Admin",
+  },
+  "editor-token": {
+    roles: ["editor"],
+    introduction: "I am an editor",
+    avatar:
+      "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
+    name: "Normal Editor",
+  },
+};
+
+const loginInfo = (options) => {
   // console.log("options", getBody(options));
   const { username } = getBody(options);
   const token = tokens[username];
@@ -30,4 +47,24 @@ const info = (options) => {
   return builder(loginInfo);
 };
 
-Mock.mock("/vue-element-admin/user/login", "post", info);
+const userInfo = (options) => {
+  console.log("===axios  userInfo=====");
+  const { token } = getQueryParameters(options);
+  const info = users[token];
+  let obj;
+  if (!info) {
+    obj = {
+      code: 500,
+      message: "Login failed, unable to get user details.",
+    };
+  } else {
+    obj = {
+      code: 0,
+      data: info,
+    };
+  }
+  return builder(obj);
+};
+
+Mock.mock(/\/vue-element-admin\/user\/login/, "post", loginInfo);
+Mock.mock(/\/vue-element-admin\/user\/info/, "get", userInfo);
