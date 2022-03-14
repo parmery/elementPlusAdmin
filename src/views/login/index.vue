@@ -1,10 +1,10 @@
 <template>
   <div class="login-container">
     <el-form
-      class="login-form"
       ref="loginForm"
       :model="loginForm"
       :rules="loginRules"
+      class="login-form"
       autocomplete="on"
       label-position="left"
     >
@@ -17,30 +17,38 @@
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          type="text"
-          placeholder="Username"
           ref="username"
           v-model="loginForm.username"
+          placeholder="请输入用户名"
           name="username"
+          type="text"
           tabindex="1"
           autocomplete="on"
         />
       </el-form-item>
 
-      <el-tooltip content="Caps lock is On" placement="right" manual>
+      <el-tooltip
+        v-model:visible="capsTooltip"
+        content="大写锁定已开启"
+        placement="right"
+        manual
+      >
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
           <el-input
+            :key="passwordType"
             ref="password"
             v-model="loginForm.password"
-            name="password"
-            placeholder="密码"
             :type="passwordType"
+            placeholder="密码"
+            name="password"
             tabindex="2"
             autocomplete="on"
             @keyup.enter="handleLogin"
+            @keyup="checkCapslock"
+            @blur="capsTooltip = false"
           />
           <span class="show-pwd" @click="showPwd">
             <svg-icon
@@ -51,6 +59,7 @@
       </el-tooltip>
 
       <el-button
+        :loading="loading"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
         @click.prevent="handleLogin"
@@ -99,7 +108,7 @@ export default {
     return {
       loginForm: {
         username: "admin",
-        password: "11111",
+        password: "",
       },
       loginRules: {
         username: [
@@ -110,11 +119,12 @@ export default {
         ],
       },
       passwordType: "password",
+      capsTooltip: false,
+      loading: false,
     };
   },
   methods: {
     handleLogin() {
-      console.log(this.loginForm);
       this.$refs.loginForm.validate((valid) => {
         console.log(valid);
       });
@@ -129,6 +139,18 @@ export default {
         this.$refs.password.focus();
       });
     },
+    checkCapslock(e) {
+      const { key } = e;
+      this.capsTooltip = key && key.length === 1 && key >= "A" && key <= "Z";
+      console.log(e);
+    },
+  },
+  mounted() {
+    if (this.loginForm.username === "") {
+      this.$refs.username.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
+    }
   },
 };
 </script>
@@ -169,6 +191,15 @@ $cursor: #fff;
   }
 
   .el-input__inner {
+    box-shadow: none;
+  }
+
+  .el-form-item.is-error .el-input__inner,
+  .el-form-item.is-error .el-input__inner:focus,
+  .el-form-item.is-error .el-select-v2__wrapper,
+  .el-form-item.is-error .el-select-v2__wrapper:focus,
+  .el-form-item.is-error .el-textarea__inner,
+  .el-form-item.is-error .el-textarea__inner:focus {
     box-shadow: none;
   }
 }
