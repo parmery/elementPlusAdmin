@@ -125,9 +125,10 @@ export default {
   },
   methods: {
     handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
-        console.log(valid);
-      });
+      this.$store.dispatch("user/login");
+      // this.$refs.loginForm.validate((valid) => {
+      //   console.log(valid);
+      // });
     },
     showPwd() {
       if (this.passwordType === "password") {

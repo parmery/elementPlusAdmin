@@ -1,3 +1,5 @@
+import { login } from "@/api/user";
+
 export default {
   namespaced: true,
   state: () => ({
@@ -5,7 +7,9 @@ export default {
   }),
   actions: {
     login() {
-      console.log("this is login");
+      login({ name: "1123" }).then((res) => {
+        console.log(res);
+      });
     },
   },
   mutations: {

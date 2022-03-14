@@ -13,6 +13,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+import "../mock";
+
 const app = createApp(App);
 installIcons(app);
 app.use(ElementPlus, {
