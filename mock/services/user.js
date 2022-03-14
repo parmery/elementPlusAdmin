@@ -23,7 +23,8 @@ const info = (options) => {
   } else {
     loginInfo = {
       code: 20000,
-      message: token,
+      message: "成功",
+      data: token,
     };
   }
   return builder(loginInfo);
